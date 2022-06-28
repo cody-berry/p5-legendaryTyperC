@@ -1,169 +1,74 @@
 /**
- *  @author
- *  @date 2022.05.
+ *  @author Cody
+ *  @date 2022.06.28
  *
+ * 0. start with the template project
+ * 1. console log a list of hero names from champion.json
+ * 2. console log some info from a specific champion
+ * 3. obtain a list of abilities from any hero
+ * 4. obtain a list of lists of hero abilities
+ * 5. make a typerc passage work with a champion.json 'blurb'
+ * 6. fetch a few champion images
+ * 7. fetch ability images from the multi-dimensional array
  *
+ * 8. tinker with the items.json page
+ * 9. display icon images
+ *
+ * draw diagram with rudimentary layout
+ *
+ * enable passage.js to handle multiple sections: 'nextSection()'. maybe new
+ * object?
+ *
+ * filter tags out of abilities
+ * color or format specific xml tags
  */
+
 let font
 let instructions
-let cards
-let passage // a passage that we're going to type
-let correctSound // the sound that we're going to play when we get a correct key
-let incorrectSound // the sound that we're going to play when we get an
-// incorrect key
-let img // the image of the randomly-selected card in setup() or the updated
-// card in updateCard()
-let cardData // the useful data in the cards
-let cardDataIndex // what index of the cardData list is the actual card
-// that we're typing
-
-let debugCorner // a new class defined in the template
+let debugCorner /* output debug text in the bottom left corner of the canvas */
+let correctSound /* the sound that we play when we get a correct key */
+let incorrectSound /* the sound that we play when we get an incorrect key */
+let passage
 
 
 function preload() {
     font = loadFont('data/consola.ttf')
-    cards = loadJSON('scryfall-snc.json')
     correctSound = loadSound('data/correct.wav')
     incorrectSound = loadSound('data/incorrect.wav')
 }
 
 
 function setup() {
-    let cnv = createCanvas(960, 540)
+    let cnv = createCanvas(960, 480)
     cnv.parent('#canvas')
     colorMode(HSB, 360, 100, 100, 100)
-    background(234, 34, 24)
+    textFont(font, 23)
 
     /* initialize instruction div */
     instructions = select('#ins')
     instructions.html(`<pre>
-        [1,2,3,4,5] → no function
-        z → freeze sketch</pre>`)
+        numpad 1 → freeze sketch</pre>`)
 
-    cardData = getCardData(cards)
+    debugCorner = new CanvasDebugCorner(5)
 
-    cardData.sort(sortCardsByID)
-
-    cardDataIndex = round(random(0, cardData.length-1))
-
-    updateCard(cardDataIndex)
-
-    console.log(cardDataIndex)
-
-    debugCorner = new CanvasDebugCorner(6)
+    passage = new Passage("this is a test" +
+        " passage\n\n\n\n\n\n\n\n\n\n\n\n\n\nscrolled?\n\n\n\n\n")
 }
 
-
-// selects the card with the given collector number, given that the card
-// data is sorted by the collector number
-function updateCard() {
-    textFont(font, 25)
-
-    if (cardDataIndex < 0) {
-        cardDataIndex = cardData.length + cardDataIndex
-    } if (cardDataIndex >= cardData.length) {
-        cardDataIndex = cardDataIndex - cardData.length
-    }
-
-    let randomCard = cardData[cardDataIndex]
-
-    console.log(randomCard)
-
-    img = loadImage(randomCard['cardPNG'])
-
-    passage = new Passage(randomCard['typeText'] + " \n")
-}
-
-
-// compares 2 cards by their id
-function sortCardsByID(firstCard, secondCard) {
-    if (firstCard.collectorID === secondCard.collectorID) {
-        return 0
-    } if (firstCard.collectorID < secondCard.collectorID) {
-        return -1
-    } if (firstCard.collectorID > secondCard.collectorID) {
-        return 1
-    }
-}
-
-
-// gets the data of the cards in the json file
-function getCardData(cards) {
-    let listOfCards = cards.data
-
-    // the relevant card data
-    let cardData = []
-    for (let card of listOfCards) {
-        let typeText = card['name'] + " " + card['mana_cost'] + "\n" +
-            card['type_line'] + "\n" + card['oracle_text']
-        let isThereAPowerAndToughness = new RegExp('[Cc]reature|[Vv]ehicle')
-        if (isThereAPowerAndToughness.test(card['type_line'])) {
-            typeText += "\n" + card['power'] + "/" + card['toughness']
-        }
-        if (card['flavor_text']) {
-            typeText += "\n" + card['flavor_text']
-        }
-
-        cardData.push({
-            'typeText': typeText,
-            'name': card['name'],
-            'manaCost': int(card['cmc']),
-            'collectorID': int(card['collector_number']),
-            'artCropPNG': card['image_uris']['art_crop'],
-            'cardPNG': card['image_uris']['png']
-        })
-    }
-
-
-
-
-    return cardData
-}
-
-// *=•
-// -=—
 
 function draw() {
     background(234, 34, 24)
-    textFont(font, 25)
-
-    if (passage.finished()) {
-        cardDataIndex = round(random(0, cardData.length-1))
-        updateCard(cardDataIndex)
-    }
+    textFont(font, 23)
 
     passage.show()
 
-    image(img, width/2 + 75, 50, width/2 - 150, height-100)
-
-    debugCorner.setText(`card data index: ${cardDataIndex}`, 5)
-    debugCorner.setText(`scroll target: ${passage.yOffset.target.toFixed(5)}`, 4)
-    debugCorner.setText(`scroll position: ${passage.yOffset.yPos.toFixed(5)}`, 3)
+    /* debugCorner needs to be last so its z-index is highest */
     debugCorner.setText(`frameCount: ${frameCount}`, 2)
     debugCorner.setText(`fps: ${frameRate().toFixed(0)}`, 1)
     debugCorner.show()
-}
 
-
-/** 🧹 shows debugging info using text() 🧹 */
-function displayDebugCorner() {
-    const LEFT_MARGIN = 10
-    const DEBUG_Y_OFFSET = height - 10 /* floor of debug corner */
-    const LINE_SPACING = 2
-    const LINE_HEIGHT = textAscent() + textDescent() + LINE_SPACING
-    fill(0, 0, 100, 100) /* white */
-    strokeWeight(0)
-
-    text(`card data index: ${cardDataIndex}`,
-        LEFT_MARGIN, DEBUG_Y_OFFSET - LINE_HEIGHT*4)
-    text(`scroll target: ${passage.yOffset.target.toFixed(5)}`,
-        LEFT_MARGIN, DEBUG_Y_OFFSET - LINE_HEIGHT*3)
-    text(`scroll position: ${passage.yOffset.yPos.toFixed(5)}`,
-        LEFT_MARGIN, DEBUG_Y_OFFSET - LINE_HEIGHT*2)
-    text(`frameCount: ${frameCount}`,
-        LEFT_MARGIN, DEBUG_Y_OFFSET - LINE_HEIGHT)
-    text(`frameRate: ${frameRate().toFixed(1)}`,
-        LEFT_MARGIN, DEBUG_Y_OFFSET)
+    if (frameCount > 3000)
+        noLoop()
 }
 
 
@@ -221,6 +126,7 @@ function processKeyTyped(key) {
     print(key + "🆚" + correctKey + ", " + passage.index)
 }
 
+
 /** 🧹 shows debugging info using text() 🧹 */
 class CanvasDebugCorner {
     constructor(lines) {
@@ -244,6 +150,15 @@ class CanvasDebugCorner {
         const DEBUG_Y_OFFSET = height - 10 /* floor of debug corner */
         const LINE_SPACING = 2
         const LINE_HEIGHT = textAscent() + textDescent() + LINE_SPACING
+
+        /* semi-transparent background */
+        fill(0, 0, 0, 50)
+        rectMode(CORNERS)
+        rect(
+            0, height,
+            width, DEBUG_Y_OFFSET - LINE_HEIGHT * this.debugMsgList.length
+        )
+
         fill(0, 0, 100, 100) /* white */
         strokeWeight(0)
 

@@ -1,7 +1,8 @@
 
 
-// an arriving number.
-
+// an arriving number. In passage.js, we'll use it to determine how far
+// we've scrolled down. The reason we need this class is that we want a
+// smooth but fast transition from one scroll position to another.
 class ArrivingNumber {
     // r is the distance at which we slow down. It'll become useful to know
     // that the variable assigned to 'r' has the same purpose, but globally.
