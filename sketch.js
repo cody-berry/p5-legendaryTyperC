@@ -57,7 +57,7 @@ function setup() {
 
     debugCorner = new CanvasDebugCorner(5)
 
-    passage = new Passage('this is a test' + '\n ')
+    passage = new Passage('this is a test' + ' \n\n\n\n')
 }
 
 
@@ -95,7 +95,7 @@ function keyPressed() {
 
 // processes given key
 function processKeyTyped(key) {
-    // asterisk (*) = bullet point (•), and dash (-) = emdash (—). This is
+    // asterisk (*) = bullet point (•), and dash (-) = em-dash (—). Thi1s is
     // the key that needs to be typed in order to get the character correct.
     let correctKey = passage.getCurrentChar(passage.index)
     if (correctKey === "•") {

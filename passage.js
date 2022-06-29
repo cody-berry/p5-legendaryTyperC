@@ -33,13 +33,14 @@ class Passage {
         // the difference of the y-coordinate between lines
         this.lineYDifference = this.LINE_SPACING + textAscent() + textDescent()
 
-        // the padding from the corners of our bounding box to
+        // the padding from the corners of our bounding box to our text
+        this.boundingBoxPadding = 10
     }
 
     show() {
         fill(0, 0, 100, 3)
 
-        let boxBottomY = min(this.linesDisplayed, this.maximumLinesInBounds)*this.lineYDifference - this.lineYDifference
+        let boxBottomY = this.TOP_MARGIN + min(this.linesDisplayed, this.maximumLinesInBounds)*this.lineYDifference - this.lineYDifference
         this.#showBoundingBox(boxBottomY)
 
         push()
@@ -110,10 +111,10 @@ class Passage {
     // shows the bounding box
     #showBoundingBox(boxBottomY) {
         // the top-left corner of our bounding box
-        let boundingBoxTL = new p5.Vector(this.LEFT_MARGIN-10, this.TOP_MARGIN - textAscent() - this.LINE_SPACING)
+        let boundingBoxTL = new p5.Vector(this.LEFT_MARGIN-this.boundingBoxPadding, this.TOP_MARGIN - textAscent() - this.LINE_SPACING)
 
         // the top-right corner of our bounding box
-        let boundingBoxTR = new p5.Vector(this.lineWrapXpos+10, this.TOP_MARGIN - textAscent() - this.LINE_SPACING)
+        let boundingBoxTR = new p5.Vector(this.lineWrapXpos+this.boundingBoxPadding, this.TOP_MARGIN - textAscent() - this.LINE_SPACING)
 
         // the y-coordinate of the bottom of our bounding box is our
         // argument, so we won't need to calculate it.
@@ -122,7 +123,7 @@ class Passage {
         // bottom-right corner because since we only need the width and
         // the height, we only need the vertices of the rectangle that are
         // horizontally or vertically connected to the top-left corner.
-        let boundingBoxBL = new p5.Vector(this.LEFT_MARGIN-10, this.TOP_MARGIN + boxBottomY)
+        let boundingBoxBL = new p5.Vector(this.LEFT_MARGIN-this.boundingBoxPadding, this.TOP_MARGIN + boxBottomY)
 
         rect(boundingBoxTL.x, boundingBoxTL.y, boundingBoxTR.x - boundingBoxTL.x, boundingBoxBL.y - boundingBoxTL.y)
     }
