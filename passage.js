@@ -92,20 +92,20 @@ class Passage {
 
         pop()
 
-        // noStroke()
-        // fill(234, 34, 24)
-        // beginShape()
-        // vertex(0, 0)
-        // vertex(0, height)
-        // vertex(width, height)
-        // vertex(width, 0)
-        // beginContour()
-        // vertex(this.lineWrapXpos + 10, this.TOP_MARGIN - textAscent() - this.LINE_SPACING)
-        // vertex(this.lineWrapXpos + 10, this.TOP_MARGIN + boxBottomY)
-        // vertex(this.LEFT_MARGIN - 10, this.TOP_MARGIN + boxBottomY)
-        // vertex(this.LEFT_MARGIN - 10, this.TOP_MARGIN - textAscent() - this.LINE_SPACING)
-        // endContour()
-        // endShape(CLOSE)
+        noStroke()
+        fill(234, 34, 24)
+        beginShape()
+        vertex(0, 0)
+        vertex(0, height)
+        vertex(width, height)
+        vertex(width, 0)
+        beginContour()
+        vertex(this.lineWrapXpos + 10, this.TOP_MARGIN - textAscent() - this.LINE_SPACING)
+        vertex(this.lineWrapXpos + 10, this.TOP_MARGIN + boxBottomY)
+        vertex(this.LEFT_MARGIN - 10, this.TOP_MARGIN + boxBottomY)
+        vertex(this.LEFT_MARGIN - 10, this.TOP_MARGIN - textAscent() - this.LINE_SPACING)
+        endContour()
+        endShape(CLOSE)
     }
 
     // shows the bounding box
@@ -232,9 +232,6 @@ class Passage {
         if (this.correctList[i] === false) {
             fill(0, 100, 70, 46)
         }
-
-        if (i === 0 && frameCount % 60 === 0)
-            console.log(textAscent() + textDescent())
 
         // draw a rectangle that starts at the most definite top-left corner
         // of the character. Its height is the difference between the

@@ -35,10 +35,12 @@ let correctSound // the sound that we're going to play when we type the
 // correct key
 let incorrectSound // the sound that we're going to play when we type the
 // incorrect key
+let champions /* a list of champions and some da */
 
 
 function preload() {
     font = loadFont('data/consola.ttf')
+    champions = loadJSON("https://ddragon.leagueoflegends.com/cdn/12.12.1/data/en_US/champion.json")
     correctSound = loadSound('data/correct.wav')
     incorrectSound = loadSound('data/incorrect.wav')
 }
@@ -58,6 +60,10 @@ function setup() {
     debugCorner = new CanvasDebugCorner(5)
 
     passage = new Passage('this is a test' + ' \n\n\n\n')
+
+    for (let championData of Object.values(champions["data"])) {
+        console.log(championData["name"])
+    }
 }
 
 
