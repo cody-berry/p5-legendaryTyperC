@@ -30,6 +30,7 @@
 let font
 let instructions
 let debugCorner /* output debug text in the bottom left corner of the canvas */
+let passage /* the main part, our passage that we'll be typing into */
 
 
 function preload() {
@@ -49,11 +50,15 @@ function setup() {
         numpad 1 → freeze sketch</pre>`)
 
     debugCorner = new CanvasDebugCorner(5)
+
+    passage = new Passage('this is a test' + '\n ')
 }
 
 
 function draw() {
     background(234, 34, 24)
+
+    passage.show()
 
     /* debugCorner needs to be last so its z-index is highest */
     debugCorner.setText(`frameCount: ${frameCount}`, 2)
