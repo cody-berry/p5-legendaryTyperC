@@ -31,18 +31,24 @@ let font
 let instructions
 let debugCorner /* output debug text in the bottom left corner of the canvas */
 let passage /* the main part, our passage that we'll be typing into */
+let correctSound // the sound that we're going to play when we type the
+// correct key
+let incorrectSound // the sound that we're going to play when we type the
+// incorrect key
 
 
 function preload() {
     font = loadFont('data/consola.ttf')
+    correctSound = loadSound('data/correct.wav')
+    incorrectSound = loadSound('data/incorrect.wav')
 }
 
 
 function setup() {
-    let cnv = createCanvas(600, 300)
+    let cnv = createCanvas(960, 480)
     cnv.parent('#canvas')
     colorMode(HSB, 360, 100, 100, 100)
-    textFont(font, 14)
+    textFont(font, 25)
 
     /* initialize instruction div */
     instructions = select('#ins')
@@ -57,10 +63,13 @@ function setup() {
 
 function draw() {
     background(234, 34, 24)
+    textFont(font, 25)
 
     passage.show()
 
     /* debugCorner needs to be last so its z-index is highest */
+    debugCorner.setText(`scroll target: ${passage.yOffset.target.toFixed(5)}`, 4)
+    debugCorner.setText(`scroll position: ${passage.yOffset.yPos.toFixed(5)}`, 3)
     debugCorner.setText(`frameCount: ${frameCount}`, 2)
     debugCorner.setText(`fps: ${frameRate().toFixed(0)}`, 1)
     debugCorner.show()
@@ -72,11 +81,41 @@ function draw() {
 
 function keyPressed() {
     /* stop sketch */
-    if (keyCode === 97) { /* numpad 1 */
+    if (keyCode === 97) { // 97 is the keycode for numpad 1
         noLoop()
         instructions.html(`<pre>
             sketch stopped</pre>`)
     }
+    /* a key has been typed! */
+    else {
+        // otherwise....
+        processKeyTyped(key)
+    }
+}
+
+// processes given key
+function processKeyTyped(key) {
+    // asterisk (*) = bullet point (•), and dash (-) = emdash (—). This is
+    // the key that needs to be typed in order to get the character correct.
+    let correctKey = passage.getCurrentChar(passage.index)
+    if (correctKey === "•") {
+        correctKey = "*"
+    } else if (correctKey === "—") {
+        correctKey = "-"
+    } if (passage.text.substring(passage.index, passage.index + 1) === "\n") {
+        correctKey = "Enter"
+    }
+    if (key !== "Shift" && key !== "Tab" && key !== "CapsLock" && key !== "Alt" && key !== "Control") {
+        if (key === correctKey) {
+            passage.setCorrect()
+            correctSound.play()
+        } else {
+            passage.setIncorrect()
+            incorrectSound.play()
+        }
+    }
+
+    print(key + "🆚" + correctKey + ", " + passage.index)
 }
 
 

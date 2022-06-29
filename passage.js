@@ -32,6 +32,8 @@ class Passage {
 
         // the difference of the y-coordinate between lines
         this.lineYDifference = this.LINE_SPACING + textAscent() + textDescent()
+
+        // the padding from the corners of our bounding box to
     }
 
     show() {
@@ -81,8 +83,6 @@ class Passage {
             this.yOffset.target = -this.lineYDifference*(this.typedLines - 1)
         }
 
-        console.log(linesDisplayedAtCurrentIndex)
-
         this.#drawCurrentWordBar(charPos)
 
         stroke(0, 0, 100)
@@ -91,20 +91,20 @@ class Passage {
 
         pop()
 
-        noStroke()
-        fill(234, 34, 24)
-        beginShape()
-        vertex(0, 0)
-        vertex(0, height)
-        vertex(width, height)
-        vertex(width, 0)
-        beginContour()
-        vertex(this.lineWrapXpos + 10, this.TOP_MARGIN - textAscent() - this.LINE_SPACING)
-        vertex(this.lineWrapXpos + 10, this.TOP_MARGIN + boxBottomY)
-        vertex(this.LEFT_MARGIN - 10, this.TOP_MARGIN + boxBottomY)
-        vertex(this.LEFT_MARGIN - 10, this.TOP_MARGIN - textAscent() - this.LINE_SPACING)
-        endContour()
-        endShape(CLOSE)
+        // noStroke()
+        // fill(234, 34, 24)
+        // beginShape()
+        // vertex(0, 0)
+        // vertex(0, height)
+        // vertex(width, height)
+        // vertex(width, 0)
+        // beginContour()
+        // vertex(this.lineWrapXpos + 10, this.TOP_MARGIN - textAscent() - this.LINE_SPACING)
+        // vertex(this.lineWrapXpos + 10, this.TOP_MARGIN + boxBottomY)
+        // vertex(this.LEFT_MARGIN - 10, this.TOP_MARGIN + boxBottomY)
+        // vertex(this.LEFT_MARGIN - 10, this.TOP_MARGIN - textAscent() - this.LINE_SPACING)
+        // endContour()
+        // endShape(CLOSE)
     }
 
     // shows the bounding box
@@ -119,17 +119,12 @@ class Passage {
         // argument, so we won't need to calculate it.
 
         // the bottom-left corner of our bounding box. We don't need the
-        // bottom-right corner because since we only need the width and the
-        // height, we only need the vertices of the rectangle that are
+        // bottom-right corner because since we only need the width and
+        // the height, we only need the vertices of the rectangle that are
         // horizontally or vertically connected to the top-left corner.
         let boundingBoxBL = new p5.Vector(this.LEFT_MARGIN-10, this.TOP_MARGIN + boxBottomY)
 
         rect(boundingBoxTL.x, boundingBoxTL.y, boundingBoxTR.x - boundingBoxTL.x, boundingBoxBL.y - boundingBoxTL.y)
-
-        // and now let's return the boxBottomY so that the caller knows the
-        // y coordinate of the bottom contour.
-
-        return boxBottomY
     }
 
     getCurrentChar(i) {
@@ -237,10 +232,14 @@ class Passage {
             fill(0, 100, 70, 46)
         }
 
+        if (i === 0 && frameCount % 60 === 0)
+            console.log(textAscent() + textDescent())
+
         // draw a rectangle that starts at the most definite top-left corner
         // of the character. Its height is the difference between the
         // top-left corner of the box and the lowest point the text could
         // ever get.
+        rectMode(CORNER)
         rect(cursor.x, cursor.y-textAscent(), textWidth(' '), textAscent()+textDescent(), 2)
     }
 
