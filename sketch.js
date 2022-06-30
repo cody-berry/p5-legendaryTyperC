@@ -59,13 +59,25 @@ function setup() {
 
     debugCorner = new CanvasDebugCorner(5)
 
-    passage = new Passage('this is a test' + ' \n\n\n\n')
-
     for (let championData of Object.values(champions["data"])) {
         console.log(championData["name"])
     }
+
+    // also blurb is just a part of the lore in the champion specifics
+    // console.log(`Blurb: ${champions["data"]["Aatrox"]["blurb"]}`)
+
+    passage = new Passage('this is a test' + ' \n\n\n\n')
+
+    // the code below links to specific data of a champion (the first
+    // champion in the list) and has a callback function to print out some
+    // data
+    // from that. also explains the link to a specific champion's data.
+    loadJSON("https://ddragon.leagueoflegends.com/cdn/12.12.1/data/en_US/champion/Aatrox.json", printData)
 }
 
+function printData(data) {
+    console.log(`Lore: ${data["data"]["Aatrox"]["lore"]}`)
+}
 
 function draw() {
     background(234, 34, 24)
