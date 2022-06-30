@@ -68,15 +68,20 @@ function setup() {
 
     passage = new Passage('this is a test' + ' \n\n\n\n')
 
-    // the code below links to specific data of a champion (the first
-    // champion in the list) and has a callback function to print out some
-    // data
-    // from that. also explains the link to a specific champion's data.
-    loadJSON("https://ddragon.leagueoflegends.com/cdn/12.12.1/data/en_US/champion/Aatrox.json", printData)
+    // the code below links to specific data of a champion and has a
+    // callback function to print out some data from that. also explains the
+    // link to a specific champion's data.
+    loadJSON("https://ddragon.leagueoflegends.com/cdn/12.12.1/data/en_US/champion/Lux.json", printData)
 }
 
 function printData(data) {
-    console.log(`Lore: ${data["data"]["Aatrox"]["lore"]}`)
+    let abilities = []
+    console.log(`Lore: ${data["data"]["Lux"]["lore"]}`)
+    console.log('Abilities:')
+    for (let ability of data["data"]["Lux"]["spells"]) {
+        abilities.push([ability["name"], ability["tooltip"]])
+    }
+    console.log(abilities)
 }
 
 function draw() {
