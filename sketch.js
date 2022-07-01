@@ -11,8 +11,7 @@
  4. obtain a list of lists of hero abilities
  5. make a typerc passage work with a champion.json 'blurb'
  6. fetch a few champion images
- 7. fetch ability images from the multidimensional array
-
+ 7. fetch ability images from the multidimensional arrays
  8. tinker with the items.json page
  9. display icon images
 
@@ -36,6 +35,7 @@ let correctSound // the sound that we're going to play when we type the
 let incorrectSound // the sound that we're going to play when we type the
 // incorrect key
 let champions /* a list of champions and some da */
+let championAbilities = [] /* a list of all the champions' abilities */
 
 
 function preload() {
@@ -59,29 +59,30 @@ function setup() {
 
     debugCorner = new CanvasDebugCorner(5)
 
-    for (let championData of Object.values(champions["data"])) {
-        console.log(championData["name"])
-    }
-
     // also blurb is just a part of the lore in the champion specifics
     // console.log(`Blurb: ${champions["data"]["Aatrox"]["blurb"]}`)
 
     passage = new Passage('this is a test' + ' \n\n\n\n')
 
-    // the code below links to specific data of a champion and has a
-    // callback function to print out some data from that. also explains the
-    // link to a specific champion's data.
-    loadJSON("https://ddragon.leagueoflegends.com/cdn/12.12.1/data/en_US/champion/Lux.json", printData)
+    console.log(champions)
+
+    for (let championData of Object.values(champions["data"])) {
+        console.log(championData["name"])
+    }
+
+    for (let championName of Object.keys(champions["data"])) {
+        loadJSON(`https://ddragon.leagueoflegends.com/cdn/12.12.1/data/en_US/champion/${championName}.json`, printData)
+    }
+
+    console.log(championAbilities)
 }
 
 function printData(data) {
     let abilities = []
-    console.log(`Lore: ${data["data"]["Lux"]["lore"]}`)
-    console.log('Abilities:')
-    for (let ability of data["data"]["Lux"]["spells"]) {
+    for (let ability of Object.values(data["data"])[0]["spells"]) {
         abilities.push([ability["name"], ability["tooltip"]])
     }
-    console.log(abilities)
+    championAbilities.push(abilities)
 }
 
 function draw() {
