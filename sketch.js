@@ -35,7 +35,7 @@ let correctSound // the sound that we're going to play when we type the
 let incorrectSound // the sound that we're going to play when we type the
 // incorrect key
 let champions /* a list of champions and some da */
-let championAbilities = [] /* a list of all the champions' abilities */
+let championAbilities = {} /* a list of all the champions' abilities */
 
 
 function preload() {
@@ -59,10 +59,7 @@ function setup() {
 
     debugCorner = new CanvasDebugCorner(5)
 
-    // also blurb is just a part of the lore in the champion specifics
-    // console.log(`Blurb: ${champions["data"]["Aatrox"]["blurb"]}`)
-
-    passage = new Passage('this is a test' + ' \n\n\n\n')
+    passage = new Passage(champions["data"]["Lux"]["blurb"] + ' \n')
 
     console.log(champions)
 
@@ -71,18 +68,19 @@ function setup() {
     }
 
     for (let championName of Object.keys(champions["data"])) {
-        loadJSON(`https://ddragon.leagueoflegends.com/cdn/12.12.1/data/en_US/champion/${championName}.json`, printData)
+        loadJSON(`https://ddragon.leagueoflegends.com/cdn/12.12.1/data/en_US/champion/${championName}.json`, getAbilities)
     }
 
     console.log(championAbilities)
 }
 
-function printData(data) {
+function getAbilities(data) {
     let abilities = []
-    for (let ability of Object.values(data["data"])[0]["spells"]) {
+    let championData = Object.values(data["data"])[0]
+    for (let ability of championData["spells"]) {
         abilities.push([ability["name"], ability["tooltip"]])
     }
-    championAbilities.push(abilities)
+    championAbilities[championData["name"]] = abilities
 }
 
 function draw() {
