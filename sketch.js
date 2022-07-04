@@ -37,6 +37,7 @@ let incorrectSound // the sound that we're going to play when we type the
 let champions /* a list of champions and some da */
 let championAbilities = {} /* a list of all the champions' abilities */
 
+let championIcons = [] /* a list of all champion icons */
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -67,18 +68,30 @@ function setup() {
         console.log(championData["name"])
     }
 
-    for (let championName of Object.keys(champions["data"])) {
+    let championNames = Object.keys(champions["data"])
+
+    /* note that the link to:
+            images are something like: https://ddragon.leagueoflegends.com/cdn/12.12.1/img/champion/Nunu.png
+            sprites are something like: https://ddragon.leagueoflegends.com/cdn/12.12.1/img/sprite/champion2.png
+            passive icons are something like: https://ddragon.leagueoflegends.com/cdn/12.12.1/img/passive/Ahri_SoulEater2.png
+            ability icons are something like: https://ddragon.leagueoflegends.com/cdn/12.12.1/img/spell/AhriSeduce.png
+    */
+
+    for (let championName of championNames) {
+        championIcons.push(`https:ddragon.leagueoflegends.com/cdn/12.12.1/img/champion/${championName}.png`)
         loadJSON(`https://ddragon.leagueoflegends.com/cdn/12.12.1/data/en_US/champion/${championName}.json`, getAbilities)
     }
 
     console.log(championAbilities)
+
+    console.log(championIcons)
 }
 
 function getAbilities(data) {
     let abilities = []
     let championData = Object.values(data["data"])[0]
     for (let ability of championData["spells"]) {
-        abilities.push([ability["name"], ability["tooltip"]])
+        abilities.push([ability["name"], ability["tooltip"], `https://ddragon.leagueoflegends.com/cdn/12.12.1/img/spell/${ability["image"]["full"]}`])
     }
     championAbilities[championData["name"]] = abilities
 }
