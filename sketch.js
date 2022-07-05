@@ -38,12 +38,15 @@ let champions /* a list of champions and some da */
 let championAbilities = {} /* a list of all the champions' abilities */
 
 let championIcons = [] /* a list of all champion icons */
+let items /* a list of all League of Legends items. */
 
 function preload() {
     font = loadFont('data/consola.ttf')
     champions = loadJSON("https://ddragon.leagueoflegends.com/cdn/12.12.1/data/en_US/champion.json")
     correctSound = loadSound('data/correct.wav')
     incorrectSound = loadSound('data/incorrect.wav')
+    items = loadJSON('data/item.json')
+    console.log(items)
 }
 
 
