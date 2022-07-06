@@ -37,7 +37,8 @@ let incorrectSound // the sound that we're going to play when we type the
 let champions /* a list of champions and some da */
 let championAbilities = {} /* a list of all the champions' abilities */
 
-let championIcons = [] /* a list of all champion icons */
+let championIcons = {} /* a dictionary of all champion icons with the key
+ being the champion */
 let items /* a list of all League of Legends items. */
 
 function preload() {
@@ -81,20 +82,19 @@ function setup() {
     */
 
     for (let championName of championNames) {
-        championIcons.push(`https:ddragon.leagueoflegends.com/cdn/12.12.1/img/champion/${championName}.png`)
+        championIcons[championName] = loadImage(`https:ddragon.leagueoflegends.com/cdn/12.12.1/img/champion/${championName}.png`)
         loadJSON(`https://ddragon.leagueoflegends.com/cdn/12.12.1/data/en_US/champion/${championName}.json`, getAbilities)
     }
-
-    console.log(championAbilities)
-
-    console.log(championIcons)
 }
 
 function getAbilities(data) {
-    let abilities = []
+    let abilities = {}
     let championData = Object.values(data["data"])[0]
+    abilities["spells"] = []
+    let passive = championData["passive"]
+    abilities["passive"] = [passive["name"], passive["tooltip"], loadImage(`https://ddragon.leagueoflegends.com/cdn/12.12.1/img/passive/${passive["image"]["full"]}`)]
     for (let ability of championData["spells"]) {
-        abilities.push([ability["name"], ability["tooltip"], `https://ddragon.leagueoflegends.com/cdn/12.12.1/img/spell/${ability["image"]["full"]}`])
+        abilities["spells"].push([ability["name"], ability["tooltip"], loadImage(`https://ddragon.leagueoflegends.com/cdn/12.12.1/img/spell/${ability["image"]["full"]}`)])
     }
     championAbilities[championData["name"]] = abilities
 }
@@ -105,15 +105,26 @@ function draw() {
 
     passage.show()
 
-    /* debugCorner needs to be last so its z-index is highest */
+    if (championAbilities["Lux"]) {
+        image(championAbilities["Lux"]["passive"][2], 100, 10)
+
+        let abilityNumber = 0
+        for (let luxAbility of championAbilities["Lux"]["spells"]) {
+            abilityNumber++
+            image(luxAbility[2], (abilityNumber + 1)*100, 10)
+        }
+        image(championIcons["Lux"], 600, 10)
+    }
+
+    /* debugCorner needs to be last so itz4s z-index is highest */
     debugCorner.setText(`scroll target: ${passage.yOffset.target.toFixed(5)}`, 4)
     debugCorner.setText(`scroll position: ${passage.yOffset.yPos.toFixed(5)}`, 3)
     debugCorner.setText(`frameCount: ${frameCount}`, 2)
     debugCorner.setText(`fps: ${frameRate().toFixed(0)}`, 1)
     debugCorner.show()
 
-    if (frameCount > 3000)
-        noLoop()
+    // if (frameCount > 3000)
+    //     noLoop()
 }
 
 

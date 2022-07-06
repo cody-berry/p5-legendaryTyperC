@@ -1,8 +1,8 @@
 
 class Passage {
     constructor(text) {
-        this.TOP_MARGIN = 100
-        this.LEFT_MARGIN = 64
+        this.TOP_MARGIN = 150
+        this.LEFT_MARGIN = 100
         this.RIGHT_MARGIN = 500
 
 
@@ -100,10 +100,10 @@ class Passage {
         vertex(width, height)
         vertex(width, 0)
         beginContour()
-        vertex(this.lineWrapXpos + 10, this.TOP_MARGIN - textAscent() - this.LINE_SPACING)
-        vertex(this.lineWrapXpos + 10, this.TOP_MARGIN + boxBottomY)
-        vertex(this.LEFT_MARGIN - 10, this.TOP_MARGIN + boxBottomY)
-        vertex(this.LEFT_MARGIN - 10, this.TOP_MARGIN - textAscent() - this.LINE_SPACING)
+        vertex(this.lineWrapXpos + this.boundingBoxPadding, this.TOP_MARGIN - textAscent() - this.LINE_SPACING)
+        vertex(this.lineWrapXpos + this.boundingBoxPadding, boxBottomY)
+        vertex(this.LEFT_MARGIN - this.boundingBoxPadding, boxBottomY)
+        vertex(this.LEFT_MARGIN - this.boundingBoxPadding, this.TOP_MARGIN - textAscent() - this.LINE_SPACING)
         endContour()
         endShape(CLOSE)
     }
